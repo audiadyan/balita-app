@@ -82,6 +82,20 @@ class ChildHealthRecordResource extends Resource
                         return calculateBmi($get, $set);
                     }),
 
+                TextInput::make('head_circumference')
+                    ->required()
+                    ->label('Lingkar Kepala (Cm)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->placeholder("Lingkar kepala dalam Cm"),
+
+                TextInput::make('arm_circumference')
+                    ->required()
+                    ->label('Lingkar Lengan (Cm)')
+                    ->numeric()
+                    ->minValue(0)
+                    ->placeholder("Lingkar lengan dalam Cm"),
+
                 TextInput::make('bmi')
                     ->required()
                     ->label('Indeks Masa Tubuh')
@@ -115,6 +129,12 @@ class ChildHealthRecordResource extends Resource
 
                 TextColumn::make('height')
                     ->label('Tinggi (Cm)'),
+
+                TextColumn::make('head_circumference')
+                    ->label('Lingkar Kepala (Cm)'),
+
+                TextColumn::make('arm_circumference')
+                    ->label('Lingkar Lengan (Cm)'),
 
                 TextColumn::make('bmi')
                     ->label('IMT'),

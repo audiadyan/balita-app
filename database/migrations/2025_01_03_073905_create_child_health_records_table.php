@@ -17,6 +17,8 @@ return new class extends Migration
             $table->date('record_date');
             $table->float('weight')->comment('in KG');
             $table->float('height')->comment('in CM');
+            $table->float('head_circumference')->comment('in CM');
+            $table->float('arm_circumference')->comment('in CM');
             $table->float('bmi');
             $table->string('notes')->nullable();
             $table->timestamps();
