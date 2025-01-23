@@ -6,11 +6,13 @@ use App\Filament\Resources\VaccineResource\Pages;
 use App\Filament\Resources\VaccineResource\RelationManagers;
 use App\Models\Vaccine;
 use Filament\Forms;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,9 +35,15 @@ class VaccineResource extends Resource
                     ->label('Nama')
                     ->placeholder('Nama Vaksin'),
 
+                ColorPicker::make('color')
+                    ->required()
+                    ->label('Warna')
+                    ->placeholder('Warna untuk ditampilkan pada diagram'),
+
                 Textarea::make('description')
                     ->label('Deskripsi')
-                    ->placeholder('Opsional'),
+                    ->placeholder('Opsional')
+                    ->autosize(),
             ])
             ->columns(1);
     }
@@ -48,6 +56,9 @@ class VaccineResource extends Resource
                     ->label('Nama Vaksin')
                     ->sortable()
                     ->searchable(),
+
+                ColorColumn::make('color')
+                    ->label('Warna'),
 
                 TextColumn::make('description')
                     ->label('Deskripsi')

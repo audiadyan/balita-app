@@ -104,7 +104,8 @@ class ChildHealthRecordResource extends Resource
 
                 Textarea::make('notes')
                     ->label('Keterangan')
-                    ->placeholder('Opsional'),
+                    ->placeholder('Opsional')
+                    ->autoSize(),
             ]);
     }
 

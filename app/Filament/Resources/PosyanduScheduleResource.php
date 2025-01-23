@@ -56,7 +56,8 @@ class PosyanduScheduleResource extends Resource
 
                 Textarea::make('description')
                     ->label('Deskripsi')
-                    ->placeholder('Opsional'),
+                    ->placeholder('Opsional')
+                    ->autoSize(),
             ]);
     }
 
@@ -120,6 +121,6 @@ class PosyanduScheduleResource extends Resource
 
     public static function getLabel(): string
     {
-        return "Posyandu";
+        return "Jadwal Posyandu";
     }
 }

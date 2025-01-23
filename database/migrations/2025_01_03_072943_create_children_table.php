@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('children', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->ulid('guardian_id')->nullable();
+            $table->ulid('mother_id')->nullable();
+            $table->ulid('father_id')->nullable();
             $table->string('name');
             $table->date('birth_date');
             $table->boolean('gender');
             $table->timestamps();
 
-            $table->foreign('guardian_id')->references('id')->on('guardians')->nullOnDelete();
+            $table->foreign('mother_id')->references('id')->on('guardians')->nullOnDelete();
+            $table->foreign('father_id')->references('id')->on('guardians')->nullOnDelete();
         });
     }
 

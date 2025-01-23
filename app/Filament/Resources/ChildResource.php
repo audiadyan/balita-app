@@ -28,87 +28,76 @@ class ChildResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getFormSchema(): array
+    {
+        return [
+            // Input untuk nama
+            TextInput::make('name')
+                ->required() // Menandakan bahwa input ini wajib diisi
+                ->label('Nama') // Label untuk input
+                ->placeholder('Masukkan nama lengkap'), // Placeholder
+
+            // Input untuk tanggal lahir
+            DatePicker::make('birth_date')
+                ->required() // Menandakan bahwa input ini wajib diisi
+                ->label('Tanggal Lahir') // Label untuk input
+                ->placeholder('Pilih tanggal lahir') // Placeholder
+                ->maxDate(Carbon::today()), // Maksimal tanggal adalah hari ini
+
+            // Pilihan untuk jenis kelamin
+            Select::make('gender')
+                ->required() // Menandakan bahwa input ini wajib diisi
+                ->label('Jenis Kelamin') // Label untuk input
+                ->options([
+                    true => 'Laki-laki', // Pilihan untuk laki-laki
+                    false => 'Perempuan', // Pilihan untuk perempuan
+                ])
+                ->placeholder('Pilih jenis kelamin'), // Placeholder
+        ];
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                // Select untuk mencari orang tua berdasarkan NIK atau Nama
-                Select::make('guardian_id')
-                    ->required()
-                    ->label('Orang Tua')
-                    ->relationship(name: 'guardian', titleAttribute: 'name')
-                    ->preload()
-                    ->getOptionLabelFromRecordUsing(fn (Guardian $record) => "{$record->nik} - {$record->name}")
-                    ->searchable(['name', 'nik'])
-                    ->createOptionForm([
-                        TextInput::make('nik')
-                            ->label('NIK')
-                            ->placeholder('Masukkan NIK')
-                            ->required(),
+                // Grup untuk data orang tua
+                Fieldset::make('Orang Tua')
+                ->schema([
+                    // Select untuk mencari ibu berdasarkan NIK atau Nama
+                    Select::make('mother_id')
+                        ->required()
+                        ->label('Ibu')
+                        ->relationship(name: 'mother', titleAttribute: 'name')
+                        ->preload()
+                        ->getOptionLabelFromRecordUsing(fn (Guardian $record) => "{$record->nik} - {$record->name}")
+                        ->searchable(['name', 'nik'])
+                        ->createOptionForm(static function () {
+                            return GuardianResource::getFormSchema(false);
+                        })
+                        ->editOptionForm(static function () {
+                            return GuardianResource::getFormSchema(false);
+                        }),
 
-                        TextInput::make('name')
-                            ->label('Nama')
-                            ->placeholder('Masukkan Nama Orang Tua')
-                            ->required(),
-
-                        Textarea::make('address')
-                            ->label('Alamat')
-                            ->placeholder('Masukkan Alamat Orang Tua'),
-
-                        TextInput::make('phone_number')
-                            ->label('No. Telepon')
-                            ->placeholder('Masukkan No. Telepon'),
-                    ])
-                    ->editOptionForm([
-                        TextInput::make('nik')
-                            ->label('NIK')
-                            ->placeholder('Masukkan NIK')
-                            ->required(),
-
-                        TextInput::make('name')
-                            ->label('Nama')
-                            ->placeholder('Masukkan Nama Orang Tua')
-                            ->required(),
-
-                        Textarea::make('address')
-                            ->label('Alamat')
-                            ->placeholder('Masukkan Alamat Orang Tua'),
-
-                        TextInput::make('phone_number')
-                            ->label('No. Telepon')
-                            ->placeholder('Masukkan No. Telepon'),
-                    ]),
-
+                    // Select untuk mencari ayah berdasarkan NIK atau Nama
+                    Select::make('father_id')
+                        ->label('Ayah')
+                        ->relationship(name: 'father', titleAttribute: 'name')
+                        ->preload()
+                        ->getOptionLabelFromRecordUsing(fn (Guardian $record) => "{$record->nik} - {$record->name}")
+                        ->searchable(['name', 'nik'])
+                        ->createOptionForm(static function () {
+                            return GuardianResource::getFormSchema(true);
+                        })
+                        ->editOptionForm(static function () {
+                            return GuardianResource::getFormSchema(true);
+                        }),
+                ]),
 
                 // Grup untuk data balita
                 Fieldset::make('Data Balita')
-                ->schema([
-                    // Input untuk nama
-                    TextInput::make('name')
-                        ->required() // Menandakan bahwa input ini wajib diisi
-                        ->label('Nama') // Label untuk input
-                        ->placeholder('Masukkan nama lengkap'), // Placeholder
-
-                    // Input untuk tanggal lahir
-                    DatePicker::make('birth_date')
-                        ->required() // Menandakan bahwa input ini wajib diisi
-                        ->label('Tanggal Lahir') // Label untuk input
-                        ->placeholder('Pilih tanggal lahir') // Placeholder
-                        ->maxDate(Carbon::today()), // Maksimal tanggal adalah hari ini
-
-                    // Pilihan untuk jenis kelamin
-                    Select::make('gender')
-                        ->required() // Menandakan bahwa input ini wajib diisi
-                        ->label('Jenis Kelamin') // Label untuk input
-                        ->options([
-                            true => 'Laki-laki', // Pilihan untuk laki-laki
-                            false => 'Perempuan', // Pilihan untuk perempuan
-                        ])
-                        ->placeholder('Pilih jenis kelamin'), // Placeholder
-                ]),
+                ->schema(static::getFormSchema()),
             ]);
     }
-
 
     public static function table(Table $table): Table
     {
@@ -131,8 +120,11 @@ class ChildResource extends Resource
                     ->label('Gender')
                     ->formatStateUsing(fn ($state) => $state ? 'Laki-laki' : 'Perempuan'),
 
-                TextColumn::make('guardian.name')
-                    ->label('Nama Orang Tua'),
+                TextColumn::make('mother.name')
+                    ->label('Nama Ibu'),
+
+                TextColumn::make('father.name')
+                    ->label('Nama Ayah'),
             ])
             ->filters([
                 // Filter berdasarkan gender

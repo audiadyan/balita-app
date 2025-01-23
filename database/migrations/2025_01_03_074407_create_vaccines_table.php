@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('vaccines', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->string('name');
+            $table->char('color', 7);
             $table->string('description')->nullable();
             $table->timestamps();
         });

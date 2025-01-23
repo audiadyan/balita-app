@@ -22,4 +22,14 @@ class Child extends Model
     {
         return $this->belongsTo(Guardian::class);
     }
+
+    public function father()
+    {
+        return $this->belongsTo(Guardian::class)->where('gender', 1);
+    }
+
+    public function mother()
+    {
+        return $this->belongsTo(Guardian::class)->where('gender', 0);
+    }
 }

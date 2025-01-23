@@ -53,7 +53,8 @@ class ChildVaccinationResource extends Resource
 
                 Textarea::make('notes')
                     ->label('Keterangan')
-                    ->placeholder('Opsional'),
+                    ->placeholder('Opsional')
+                    ->autoSize(),
             ]);
     }
 
@@ -93,7 +94,9 @@ class ChildVaccinationResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('vaccine_date', 'desc')
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
