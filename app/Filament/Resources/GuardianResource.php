@@ -55,7 +55,8 @@ class GuardianResource extends Resource
                 ])
                 ->placeholder('Pilih jenis kelamin')
                 ->default($defaultGender)
-                ->disabled(fn () => $defaultGender !== null),
+                ->disabled(fn () => $defaultGender !== null)
+                ->dehydrated(fn ($state) => $state !== null),
 
             Select::make('income')
                 ->required()
@@ -63,7 +64,7 @@ class GuardianResource extends Resource
                 ->options([
                     1 => 'Di bawah 1 juta',
                     2 => '1 - 4 juta',
-                    3 => 'Di atas 5 juta',
+                    3 => 'Di atas 4 juta',
                 ])
                 ->placeholder('Pilih salah satu'),
 
